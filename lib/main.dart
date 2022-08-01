@@ -1,5 +1,8 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -37,6 +40,9 @@ class _bmiState extends State<bmi> {
   int _counter = 1;
   int _wcounter = 1;
   double height = 180;
+  String result = "";
+  String resultdata = "";
+  double bmi = 10;
 
   void _add() => setState(() {
       _counter++;
@@ -53,7 +59,7 @@ class _bmiState extends State<bmi> {
     });
 
   void _weightremove()=> setState(() {
-      if(_counter!=1){
+      if(_wcounter!=1){
         _wcounter--;
       }
     });
@@ -81,6 +87,22 @@ class _bmiState extends State<bmi> {
     }
   }
 
+  String calculatebmi(int _currentValue,int _wcounter){
+     bmi = _wcounter / pow(_currentValue/100 , 2);
+        return bmi.toStringAsFixed(1);
+  }
+
+  String getdata(int bmi){
+    if(bmi >= 25){
+      return "higher than normal body";
+    }else if(bmi > 18){
+      return " normal body";
+    }else{
+      return "lower than normal body";
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +119,7 @@ class _bmiState extends State<bmi> {
         ),
         body: Center(
           child: Container(
-            color: Colors.black87,
+            color: Colors.blueGrey,
             child: Column(
               children: [
                 Row(
@@ -360,7 +382,41 @@ class _bmiState extends State<bmi> {
                               borderRadius: BorderRadius.circular(40),
                               side: const BorderSide(color: Colors.black)))
                           ),
-                            onPressed: (){},
+                            onPressed: (){
+                            setState(() {
+
+                            });
+
+                            result = calculatebmi(_currentValue, _wcounter);
+                            resultdata = getdata(bmi.toInt());
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      child: Container(
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blueGrey,
+                                          borderRadius: BorderRadius.circular(20)
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text('$result',style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white
+                                            ),),
+                                            Text('$resultdata',style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.redAccent
+                                            ),)
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            },
                             child: const Text('CALCULATE')
                         ),
                       ),
@@ -373,3 +429,4 @@ class _bmiState extends State<bmi> {
         ));
   }
 }
+
